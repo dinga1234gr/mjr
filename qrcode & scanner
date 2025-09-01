@@ -1,0 +1,39 @@
+#generator
+import qrcode
+
+data = "https://www.caddamss.com"   # 👈 Your website here
+qr = qrcode.make(data)
+qr.save("qrcode.png")
+
+print("QR Code saved with website link!")
+
+#scanner
+
+import cv2
+from pyzbar.pyzbar import decode
+
+# Load the QR code image
+image = cv2.imread('qrcode.png')
+
+# Decode the QR code
+decoded_objects = decode(image)
+
+if decoded_objects:
+    for obj in decoded_objects:
+        data = obj.data.decode('utf-8')
+        print("Type:", obj.type)
+        print("Data:", data)
+
+        # Draw rectangle around the QR code
+        (x, y, w, h) = obj.rect
+        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+else:
+    print("No QR code found in the image.")
+
+# Show the image with QR highlighted
+cv2.imshow('Scanned QR Code', image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
+
